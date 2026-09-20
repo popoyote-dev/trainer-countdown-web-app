@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trainer-countdown-v1';
+const CACHE_NAME = 'trainer-countdown-v2';
 
 const APP_SHELL = [
     './',
@@ -31,6 +31,9 @@ const APP_SHELL = [
     './static/img/tick-svgrepo-com.svg',
     './static/img/toggle-off-svgrepo-com.svg',
     './static/img/toggle-on-svgrepo-com.svg',
+    './static/img/Duck-ai-image-logo.jpeg',
+    './static/img/Duck-ai-image-logo.black.jpeg',
+    './static/img/trainer-countdown-logo.svg',
     './static/img/trash-2-svgrepo-com.svg',
     './static/sounds/1-bell.mp3',
     './static/sounds/2-bells.mp3',

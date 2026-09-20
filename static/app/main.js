@@ -138,6 +138,14 @@ const deactivateCycle = (cycleId) => {
 const setEditingMode = (isEditing) => {
     state.isEditing = isEditing;
     render();
+    if (isEditing) {
+        closeSidebar();
+    }
+};
+
+const closeSidebar = () => {
+    sidebarElement.classList.remove('is-open');
+    sidebarBackdrop.classList.remove('is-visible');
 };
 
 const updateEditorVisibility = () => {
@@ -761,10 +769,7 @@ sidebarToggleButton.addEventListener('click', () => {
     sidebarElement.classList.toggle('is-open');
     sidebarBackdrop.classList.toggle('is-visible');
 });
-sidebarBackdrop.addEventListener('click', () => {
-    sidebarElement.classList.remove('is-open');
-    sidebarBackdrop.classList.remove('is-visible');
-});
+sidebarBackdrop.addEventListener('click', closeSidebar);
 
 readCycles().then((cycles) => {
     state.cycles = cycles;

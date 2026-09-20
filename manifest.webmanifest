@@ -13,6 +13,18 @@
             "sizes": "any",
             "type": "image/jpeg",
             "purpose": "any maskable"
+        },
+        {
+            "src": "static/img/Duck-ai-image-logo.black.jpeg",
+            "sizes": "any",
+            "type": "image/jpeg",
+            "purpose": "any"
+        },
+        {
+            "src": "static/img/trainer-countdown-logo.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
         }
     ]
 }
