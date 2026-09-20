@@ -9,9 +9,9 @@
     "theme_color": "#1f6f5b",
     "icons": [
         {
-            "src": "static/img/dumbell-svgrepo-com.svg",
+            "src": "static/img/Duck-ai-image-logo.jpeg",
             "sizes": "any",
-            "type": "image/svg+xml",
+            "type": "image/jpeg",
             "purpose": "any maskable"
         }
     ]
