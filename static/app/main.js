@@ -191,21 +191,25 @@ const createCounterCard = (counter, index) => {
         <img src="static/img/trash-2-svgrepo-com.svg" alt="" />
       </button>
     </div>
-    <label>
-      Nombre
-      <input type="text" class="counter-name" value="${(counter.name || '').replace(/"/g, '&quot;')}" />
-        </label>
-        <div class="counter-fields">
+    <div class="counter-fields">
+        <div class="counter-details-grid">
+            <label>
+                Nombre
+                <input type="text" class="counter-name" value="${(counter.name || '').replace(/"/g, '&quot;')}" />
+            </label>
             <label>
                 Segundos
                 <input type="number" min="1" class="counter-seconds" value="${Number(counter.seconds || 0)}" />
             </label>
-            <label class="counter-sound-field">
-                Sonido
-            </label>
+        </div>
+        <div class="sound-fields-grid">
             <label class="counter-start-sound-field">
                 Sonido de inicio
             </label>
+            <label class="counter-sound-field">
+                Sonido final
+            </label>
+        </div>
     </div>
   `;
 

@@ -45,7 +45,7 @@
         <main class="main-panel">
             <section class="cycle-editor" hidden>
                 <form id="cycle-form">
-                    <div class="form-grid">
+                    <div class="form-grid cycle-details-grid">
                         <label>
                             Nombre del ciclo
                             <input id="cycle-name" name="cycle-name" type="text" placeholder="Ej. Fuerza 1" />
@@ -56,15 +56,17 @@
                         </label>
                     </div>
 
-                    <label>
-                        Sonido de inicio
-                        <select id="start-sound-url" name="start-sound-url"></select>
-                    </label>
+                    <div class="form-grid sound-fields-grid">
+                        <label>
+                            Sonido de inicio
+                            <select id="start-sound-url" name="start-sound-url"></select>
+                        </label>
 
-                    <label>
-                        Sonido final
-                        <select id="final-sound-url" name="final-sound-url"></select>
-                    </label>
+                        <label>
+                            Sonido final
+                            <select id="final-sound-url" name="final-sound-url"></select>
+                        </label>
+                    </div>
 
                     <div class="form-actions cycle-editor-actions">
                         <button id="share-cycle-btn" type="button" class="icon-btn secondary-btn"

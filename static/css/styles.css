@@ -245,6 +245,10 @@ button:hover {
     gap: 1rem;
 }
 
+.cycle-details-grid {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+}
+
 label {
     display: block;
     color: var(--muted);
@@ -303,9 +307,27 @@ select {
 }
 
 .counter-fields {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 0.7rem;
+}
+
+.counter-details-grid,
+.sound-fields-grid {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.counter-details-grid {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+}
+
+.sound-fields-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.counter-fields label {
+    margin-bottom: 0;
 }
 
 .danger-link {
@@ -477,7 +499,8 @@ select {
 @media (max-width: 520px) {
 
     .form-grid,
-    .counter-fields {
+    .counter-details-grid,
+    .sound-fields-grid {
         grid-template-columns: 1fr;
     }
 
