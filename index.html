@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trainer Countdown</title>
+    <link rel="stylesheet" href="static/css/styles.css" />
+    <script src="static/vendor/qrious.min.js"></script>
+    <script src="static/vendor/jsQR.js"></script>
+</head>
+
+<body>
+    <header class="app-header">
+        <button id="sidebar-toggle-btn" type="button" class="icon-btn ghost-btn" title="Mostrar/ocultar menú"
+            aria-label="Mostrar/ocultar menú">
+            <img src="static/img/hamburger-4-svgrepo-com.svg" alt="" />
+        </button>
+        <h1 class="app-header-title">Trainer Countdown</h1>
+        <div class="app-header-brand-icon" aria-hidden="true">
+            <img src="static/img/dumbell-svgrepo-com.svg" alt="" />
+        </div>
+    </header>
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div id="cycle-list" class="cycle-list" aria-live="polite"></div>
+            <div class="sidebar-actions">
+                <button id="new-cycle-btn" type="button" class="icon-btn primary-btn" title="Nuevo ciclo"
+                    aria-label="Nuevo ciclo">
+                    <img src="static/img/hexagon-plus-svgrepo-com.svg" alt="" />
+                </button>
+                <button id="duplicate-cycle-btn" type="button" class="icon-btn secondary-btn" title="Duplicar ciclo"
+                    aria-label="Duplicar ciclo">
+                    <img src="static/img/copy-svgrepo-com.svg" alt="" />
+                </button>
+                <button id="scan-qr-btn" type="button" class="icon-btn ghost-btn" title="Leer ciclo por QR"
+                    aria-label="Leer ciclo por QR">
+                    <img src="static/img/qr-reader-svgrepo-com.svg" alt="" />
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-panel">
+            <section class="cycle-editor" hidden>
+                <form id="cycle-form">
+                    <div class="form-grid">
+                        <label>
+                            Nombre del ciclo
+                            <input id="cycle-name" name="cycle-name" type="text" placeholder="Ej. Fuerza 1" />
+                        </label>
+                        <label>
+                            Repeticiones
+                            <input id="cycle-repetitions" name="cycle-repetitions" type="number" min="1" value="1" />
+                        </label>
+                    </div>
+
+                    <label>
+                        Sonido de inicio
+                        <select id="start-sound-url" name="start-sound-url"></select>
+                    </label>
+
+                    <label>
+                        Sonido final
+                        <select id="final-sound-url" name="final-sound-url"></select>
+                    </label>
+
+                    <div class="form-actions cycle-editor-actions">
+                        <button id="share-cycle-btn" type="button" class="icon-btn secondary-btn"
+                            title="Compartir ciclo por QR" aria-label="Compartir ciclo por QR">
+                            <img src="static/img/share-svgrepo-com.svg" alt="" />
+                        </button>
+                        <button id="delete-cycle-btn" type="button" class="icon-btn danger-btn" title="Eliminar ciclo"
+                            aria-label="Eliminar ciclo">
+                            <img src="static/img/trash-2-svgrepo-com.svg" alt="" />
+                        </button>
+                    </div>
+
+                    <hr class="cycle-editor-divider" />
+
+                    <div class="section-header">
+                        <h2>Contadores</h2>
+                        <button id="add-counter-btn" type="button" class="icon-btn secondary-btn"
+                            title="Agregar contador" aria-label="Agregar contador">
+                            <img src="static/img/hexagon-plus-svgrepo-com.svg" alt="" />
+                        </button>
+                    </div>
+
+                    <div id="counter-list" class="counter-list"></div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="icon-btn primary-btn" title="Guardar ciclo"
+                            aria-label="Guardar ciclo">
+                            <img src="static/img/tick-svgrepo-com.svg" alt="" />
+                        </button>
+                        <button id="cancel-edit-btn" type="button" class="icon-btn ghost-btn" title="Cancelar"
+                            aria-label="Cancelar">
+                            <img src="static/img/circle-cancel-svgrepo-com.svg" alt="" />
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="timer-panel">
+                <div class="timer-panel-header">
+                    <h2>Ciclos activos</h2>
+                </div>
+                <div id="active-timers-list" class="active-timers-list">
+                    <p id="active-timers-empty" class="active-timers-empty">Activa un ciclo desde la lista para verlo
+                        aquí.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="share-qr-modal" class="modal-overlay" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="share-qr-title">
+            <div class="modal-header">
+                <h2 id="share-qr-title">Compartir ciclo</h2>
+                <button id="share-qr-close-btn" type="button" class="icon-btn ghost-btn" title="Cerrar"
+                    aria-label="Cerrar">
+                    <img src="static/img/cross-svgrepo-com.svg" alt="" />
+                </button>
+            </div>
+            <canvas id="share-qr-canvas" class="qr-canvas"></canvas>
+            <p class="modal-hint">Escanea este código desde otro dispositivo para importar el ciclo.</p>
+        </div>
+    </div>
+
+    <div id="scan-qr-modal" class="modal-overlay" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="scan-qr-title">
+            <div class="modal-header">
+                <h2 id="scan-qr-title">Leer ciclo por QR</h2>
+                <button id="scan-qr-close-btn" type="button" class="icon-btn ghost-btn" title="Cerrar"
+                    aria-label="Cerrar">
+                    <img src="static/img/cross-svgrepo-com.svg" alt="" />
+                </button>
+            </div>
+            <video id="scan-qr-video" class="qr-video" muted playsinline></video>
+            <canvas id="scan-qr-canvas" hidden></canvas>
+            <p id="scan-qr-hint" class="modal-hint">Apunta la cámara al código QR del ciclo.</p>
+        </div>
+    </div>
+
+    <script type="module" src="static/app/main.js"></script>
+</body>
+
+</html>
