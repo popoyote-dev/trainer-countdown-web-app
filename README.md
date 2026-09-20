@@ -31,6 +31,7 @@ npm test
 
 ## Funcionalidades incluidas
 
+- Instalable como aplicación web progresiva (PWA) y disponible sin conexión tras la primera visita.
 - Crear, duplicar y eliminar ciclos de entrenamiento.
 - Configurar varios temporizadores con nombre y duración.
 - Repetición de ciclos según el número indicado.
@@ -78,3 +79,5 @@ trainer-countdown-web-app/
 ## Notas
 
 La organización actual del proyecto usa `static/` como contenedor principal de la lógica, estilos e recursos multimedia, mientras que la entrada principal de la app sigue estando en la raíz con `index.html`.
+
+La instalación y el modo sin conexión requieren servir la aplicación desde `http://localhost` o HTTPS; no están disponibles al abrir `index.html` mediante `file://`.
