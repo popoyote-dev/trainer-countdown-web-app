@@ -232,7 +232,7 @@ const renderCycleList = () => {
       <span class="cycle-meta">${cycle.repetitions}x · ${formatDurationSummary(getCycleDurationSeconds(cycle))}</span>
             <div class="cycle-tags" aria-label="Etiquetas">${tags.map((tag) => `<span class="tag-badge">${tag.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`).join('')}</div>
       <div class="cycle-item-actions">
-        <button type="button" class="cycle-activate-btn icon-btn secondary-btn" ${isActive ? 'disabled' : ''} title="${isActive ? 'Ciclo activo' : 'Activar ciclo'}" aria-label="${isActive ? 'Ciclo activo' : 'Activar ciclo'}">
+        <button type="button" class="cycle-activate-btn icon-btn secondary-btn" title="${isActive ? 'Desactivar ciclo' : 'Activar ciclo'}" aria-label="${isActive ? 'Desactivar ciclo' : 'Activar ciclo'}">
           <img src="static/img/${isActive ? 'toggle-on-svgrepo-com.svg' : 'toggle-off-svgrepo-com.svg'}" alt="" />
         </button>
                 <button type="button" class="cycle-share-btn icon-btn secondary-btn" title="Compartir ciclo por QR" aria-label="Compartir ciclo por QR">
@@ -245,6 +245,11 @@ const renderCycleList = () => {
     `;
 
         item.querySelector('.cycle-activate-btn').addEventListener('click', () => {
+            if (isActive) {
+                deactivateCycle(cycle.id);
+                return;
+            }
+
             activateCycle(cycle.id);
         });
 
@@ -792,6 +797,7 @@ const openShareQrModal = (cycleId = state.selectedCycleId) => {
         return;
     }
 
+    closeSidebar();
     shareQrModal.hidden = false;
 
     try {
