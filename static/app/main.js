@@ -64,6 +64,15 @@ const createSoundSelect = ({ className, value, label }) => {
     return select;
 };
 
+const getCounterTimeParts = (totalSeconds) => {
+    const safeSeconds = Number.isFinite(Number(totalSeconds)) ? Math.max(0, Math.floor(Number(totalSeconds))) : 0;
+
+    return {
+        minutes: Math.floor(safeSeconds / 60),
+        seconds: safeSeconds % 60,
+    };
+};
+
 const state = {
     cycles: [],
     selectedCycleId: null,
@@ -254,8 +263,12 @@ const createCounterCard = (counter, index) => {
                 <input type="text" class="counter-name" value="${(counter.name || '').replace(/"/g, '&quot;')}" />
             </label>
             <label>
+                Minutos
+                <input type="number" min="0" step="1" class="counter-minutes" value="${getCounterTimeParts(counter.seconds).minutes}" />
+            </label>
+            <label>
                 Segundos
-                <input type="number" min="1" class="counter-seconds" value="${Number(counter.seconds || 0)}" />
+                <input type="number" min="0" max="60" step="1" class="counter-seconds" value="${getCounterTimeParts(counter.seconds).seconds}" />
             </label>
         </div>
         <div class="sound-fields-grid">
@@ -536,14 +549,19 @@ const buildCycleFromForm = () => {
     cycle.finalSound = cycle.finalSoundUrl;
     cycle.counters = cards.map((card, index) => {
         const nameInput = card.querySelector('.counter-name');
+        const minutesInput = card.querySelector('.counter-minutes');
         const secondsInput = card.querySelector('.counter-seconds');
         const soundInput = card.querySelector('.counter-sound');
         const startSoundInputEl = card.querySelector('.counter-start-sound');
+        const minutes = Number(minutesInput.value);
+        const seconds = Number(secondsInput.value);
 
         return createCounter({
             id: card.dataset.counterId || `counter-${index}`,
             name: nameInput.value.trim() || `Contador ${index + 1}`,
-            seconds: Number(secondsInput.value) || 30,
+            seconds: (Number.isInteger(minutes) && minutes >= 0 && Number.isInteger(seconds) && seconds >= 0 && seconds <= 60)
+                ? (minutes * 60) + seconds
+                : 0,
             soundUrl: soundInput.value,
             startSoundUrl: startSoundInputEl.value,
         });
@@ -553,6 +571,19 @@ const buildCycleFromForm = () => {
 };
 
 const saveSelectedCycle = () => {
+    const cards = Array.from(counterListElement.querySelectorAll('.counter-card'));
+    const hasInvalidTime = cards.some((card) => {
+        const minutes = Number(card.querySelector('.counter-minutes').value);
+        const seconds = Number(card.querySelector('.counter-seconds').value);
+
+        return !Number.isInteger(minutes) || minutes < 0 || !Number.isInteger(seconds) || seconds < 0 || seconds > 60;
+    });
+
+    if (hasInvalidTime) {
+        window.alert('Los minutos deben ser enteros mayores o iguales a 0 y los segundos deben estar entre 0 y 60.');
+        return null;
+    }
+
     const cycle = buildCycleFromForm();
     const validation = validateCycle(cycle);
 
