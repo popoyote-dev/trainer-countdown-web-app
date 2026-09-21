@@ -793,6 +793,7 @@ const scanQrFrame = () => {
 };
 
 const openScanQrModal = async () => {
+    closeSidebar();
     scanQrHint.textContent = 'Apunta la cámara al código QR del ciclo.';
     scanQrModal.hidden = false;
 
