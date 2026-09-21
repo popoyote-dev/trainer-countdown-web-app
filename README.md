@@ -81,3 +81,7 @@ trainer-countdown-web-app/
 La organización actual del proyecto usa `static/` como contenedor principal de la lógica, estilos e recursos multimedia, mientras que la entrada principal de la app sigue estando en la raíz con `index.html`.
 
 La instalación y el modo sin conexión requieren servir la aplicación desde `http://localhost` o HTTPS; no están disponibles al abrir `index.html` mediante `file://`.
+
+## Sitio de prueba
+
+https://popoyote-dev.github.io/trainer-countdown-web-app/

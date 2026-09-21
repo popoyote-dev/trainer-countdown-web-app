@@ -51,10 +51,6 @@
                     aria-label="Nuevo ciclo">
                     <img src="static/img/hexagon-plus-svgrepo-com.svg" alt="" />
                 </button>
-                <button id="duplicate-cycle-btn" type="button" class="icon-btn secondary-btn" title="Duplicar ciclo"
-                    aria-label="Duplicar ciclo">
-                    <img src="static/img/copy-svgrepo-com.svg" alt="" />
-                </button>
                 <button id="scan-qr-btn" type="button" class="icon-btn ghost-btn" title="Leer ciclo por QR"
                     aria-label="Leer ciclo por QR">
                     <img src="static/img/qr-reader-svgrepo-com.svg" alt="" />
@@ -93,17 +89,6 @@
                         </label>
                     </div>
 
-                    <div class="form-actions cycle-editor-actions">
-                        <button id="share-cycle-btn" type="button" class="icon-btn secondary-btn"
-                            title="Compartir ciclo por QR" aria-label="Compartir ciclo por QR">
-                            <img src="static/img/share-svgrepo-com.svg" alt="" />
-                        </button>
-                        <button id="delete-cycle-btn" type="button" class="icon-btn danger-btn" title="Eliminar ciclo"
-                            aria-label="Eliminar ciclo">
-                            <img src="static/img/trash-2-svgrepo-com.svg" alt="" />
-                        </button>
-                    </div>
-
                     <hr class="cycle-editor-divider" />
 
                     <div class="section-header">
@@ -116,15 +101,27 @@
 
                     <div id="counter-list" class="counter-list"></div>
 
-                    <div class="form-actions">
-                        <button type="submit" class="icon-btn primary-btn" title="Guardar ciclo"
-                            aria-label="Guardar ciclo">
-                            <img src="static/img/tick-svgrepo-com.svg" alt="" />
-                        </button>
-                        <button id="cancel-edit-btn" type="button" class="icon-btn ghost-btn" title="Cancelar"
-                            aria-label="Cancelar">
-                            <img src="static/img/circle-cancel-svgrepo-com.svg" alt="" />
-                        </button>
+                    <div class="form-actions cycle-editor-actions">
+                        <div class="cycle-action-group">
+                            <button type="submit" class="icon-btn primary-btn" title="Guardar ciclo"
+                                aria-label="Guardar ciclo">
+                                <img src="static/img/tick-svgrepo-com.svg" alt="" />
+                            </button>
+                            <button id="cancel-edit-btn" type="button" class="icon-btn ghost-btn" title="Cancelar"
+                                aria-label="Cancelar">
+                                <img src="static/img/circle-cancel-svgrepo-com.svg" alt="" />
+                            </button>
+                        </div>
+                        <div class="cycle-action-group">
+                            <button id="duplicate-cycle-btn" type="button" class="icon-btn secondary-btn"
+                                title="Duplicar ciclo" aria-label="Duplicar ciclo">
+                                <img src="static/img/copy-svgrepo-com.svg" alt="" />
+                            </button>
+                            <button id="delete-cycle-btn" type="button" class="icon-btn danger-btn"
+                                title="Eliminar ciclo" aria-label="Eliminar ciclo">
+                                <img src="static/img/trash-2-svgrepo-com.svg" alt="" />
+                            </button>
+                        </div>
                     </div>
                 </form>
             </section>

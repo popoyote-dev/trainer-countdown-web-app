@@ -17,7 +17,6 @@ const addCounterButton = document.querySelector('#add-counter-btn');
 const newCycleButton = document.querySelector('#new-cycle-btn');
 const duplicateCycleButton = document.querySelector('#duplicate-cycle-btn');
 const deleteCycleButton = document.querySelector('#delete-cycle-btn');
-const shareCycleButton = document.querySelector('#share-cycle-btn');
 const shareQrModal = document.querySelector('#share-qr-modal');
 const shareQrCloseButton = document.querySelector('#share-qr-close-btn');
 const shareQrCanvas = document.querySelector('#share-qr-canvas');
@@ -236,6 +235,9 @@ const renderCycleList = () => {
         <button type="button" class="cycle-activate-btn icon-btn secondary-btn" ${isActive ? 'disabled' : ''} title="${isActive ? 'Ciclo activo' : 'Activar ciclo'}" aria-label="${isActive ? 'Ciclo activo' : 'Activar ciclo'}">
           <img src="static/img/${isActive ? 'toggle-on-svgrepo-com.svg' : 'toggle-off-svgrepo-com.svg'}" alt="" />
         </button>
+                <button type="button" class="cycle-share-btn icon-btn secondary-btn" title="Compartir ciclo por QR" aria-label="Compartir ciclo por QR">
+                    <img src="static/img/share-svgrepo-com.svg" alt="" />
+                </button>
         <button type="button" class="cycle-edit-btn icon-btn ghost-btn" title="Editar ciclo" aria-label="Editar ciclo">
           <img src="static/img/edit-svgrepo-com.svg" alt="" />
         </button>
@@ -244,6 +246,10 @@ const renderCycleList = () => {
 
         item.querySelector('.cycle-activate-btn').addEventListener('click', () => {
             activateCycle(cycle.id);
+        });
+
+        item.querySelector('.cycle-share-btn').addEventListener('click', () => {
+            openShareQrModal(cycle.id);
         });
 
         item.querySelector('.cycle-edit-btn').addEventListener('click', () => {
@@ -780,8 +786,8 @@ const importCycleData = (rawCycle) => {
     return true;
 };
 
-const openShareQrModal = () => {
-    const cycle = getSelectedCycle();
+const openShareQrModal = (cycleId = state.selectedCycleId) => {
+    const cycle = state.cycles.find((item) => item.id === cycleId);
     if (!cycle) {
         return;
     }
@@ -912,7 +918,6 @@ addCounterButton.addEventListener('click', () => {
 newCycleButton.addEventListener('click', createNewCycle);
 duplicateCycleButton.addEventListener('click', duplicateSelectedCycle);
 deleteCycleButton.addEventListener('click', deleteSelectedCycle);
-shareCycleButton.addEventListener('click', openShareQrModal);
 shareQrCloseButton.addEventListener('click', closeShareQrModal);
 scanQrButton.addEventListener('click', openScanQrModal);
 scanQrCloseButton.addEventListener('click', closeScanQrModal);

@@ -110,6 +110,11 @@ button {
     justify-content: space-between;
 }
 
+.cycle-action-group {
+    display: flex;
+    gap: 0.75rem;
+}
+
 .sidebar-actions {
     justify-content: center;
     flex-shrink: 0;
@@ -256,13 +261,15 @@ button:hover {
 }
 
 .cycle-item-actions {
-    display: flex;
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
     gap: 0.5rem;
     margin-top: 0.4rem;
 }
 
 .cycle-item-actions button {
-    flex: 1;
+    width: 100%;
+    min-width: 0;
     padding: 0.4rem 0.5rem;
     font-size: 0.78rem;
     border-radius: 8px;
