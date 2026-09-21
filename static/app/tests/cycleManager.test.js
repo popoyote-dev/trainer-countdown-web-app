@@ -2,16 +2,21 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import { createSoundPreviewHandler } from '../audio.js';
-import { createEmptyCycle, getCycleDurationSeconds, validateCycle } from '../cycleManager.js';
+import { createEmptyCycle, getCycleDurationSeconds, normalizeTags, validateCycle } from '../cycleManager.js';
 
 test('createEmptyCycle builds a valid default cycle', () => {
     const cycle = createEmptyCycle();
 
     assert.equal(cycle.name, 'Nuevo ciclo');
     assert.equal(cycle.repetitions, 1);
+    assert.deepEqual(cycle.tags, []);
     assert.ok(Array.isArray(cycle.counters));
     assert.equal(cycle.counters.length, 1);
     assert.equal(cycle.counters[0].name, 'Contador 1');
+});
+
+test('normalizeTags cleans, deduplicates, and limits cycle tags', () => {
+    assert.deepEqual(normalizeTags(' fuerza, cardio, fuerza '), ['fuerza', 'cardio']);
 });
 
 test('validateCycle rejects empty names and invalid repetitions', () => {

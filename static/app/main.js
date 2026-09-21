@@ -1,5 +1,5 @@
 import { AVAILABLE_SOUNDS, createSoundPreviewHandler, playSoundConfig } from './audio.js';
-import { createCounter, createEmptyCycle, duplicateCycle, getCycleDurationSeconds, validateCycle } from './cycleManager.js';
+import { createCounter, createEmptyCycle, duplicateCycle, getCycleDurationSeconds, normalizeTags, validateCycle } from './cycleManager.js';
 import { deleteCycleById, readCycles, saveCycles } from './storage.js';
 import { createCycleRunner } from './timer.js';
 
@@ -8,6 +8,7 @@ const cycleEditorElement = document.querySelector('.cycle-editor');
 const cancelEditButton = document.querySelector('#cancel-edit-btn');
 const cycleNameInput = document.querySelector('#cycle-name');
 const cycleRepetitionsInput = document.querySelector('#cycle-repetitions');
+const cycleTagsInput = document.querySelector('#cycle-tags');
 const finalSoundInput = document.querySelector('#final-sound-url');
 const startSoundInput = document.querySelector('#start-sound-url');
 const counterListElement = document.querySelector('#counter-list');
@@ -69,6 +70,7 @@ const state = {
     isEditing: false,
     activeCycleIds: [],
     timers: new Map(),
+    activeTagFilters: new Set(),
 };
 
 const persistCycles = () => {
@@ -155,14 +157,21 @@ const updateEditorVisibility = () => {
 const renderCycleList = () => {
     cycleListElement.innerHTML = '';
 
-    state.cycles.forEach((cycle) => {
+    const visibleCycles = state.cycles.filter((cycle) => {
+        const tags = normalizeTags(cycle.tags);
+        return !state.activeTagFilters.size || [...state.activeTagFilters].some((tag) => tags.includes(tag));
+    });
+
+    visibleCycles.forEach((cycle) => {
         const isActive = state.activeCycleIds.includes(cycle.id);
+        const tags = normalizeTags(cycle.tags);
         const item = document.createElement('div');
         item.className = `cycle-item ${cycle.id === state.selectedCycleId ? 'selected' : ''} ${isActive ? 'is-active' : ''}`;
         item.dataset.id = cycle.id;
         item.innerHTML = `
       <span class="cycle-name">${cycle.name || 'Sin nombre'}</span>
       <span class="cycle-meta">${cycle.repetitions}x · ${formatDurationSummary(getCycleDurationSeconds(cycle))}</span>
+            <div class="cycle-tags" aria-label="Etiquetas">${tags.map((tag) => `<span class="tag-badge">${tag.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`).join('')}</div>
       <div class="cycle-item-actions">
         <button type="button" class="cycle-activate-btn icon-btn secondary-btn" ${isActive ? 'disabled' : ''} title="${isActive ? 'Ciclo activo' : 'Activar ciclo'}" aria-label="${isActive ? 'Ciclo activo' : 'Activar ciclo'}">
           <img src="static/img/${isActive ? 'toggle-on-svgrepo-com.svg' : 'toggle-off-svgrepo-com.svg'}" alt="" />
@@ -184,6 +193,45 @@ const renderCycleList = () => {
         });
 
         cycleListElement.appendChild(item);
+    });
+};
+
+const renderTagFilters = () => {
+    const tags = [...new Set(state.cycles.flatMap((cycle) => normalizeTags(cycle.tags)))].sort((a, b) => a.localeCompare(b));
+    state.activeTagFilters.forEach((tag) => {
+        if (!tags.includes(tag)) {
+            state.activeTagFilters.delete(tag);
+        }
+    });
+    const filterElement = document.querySelector('#cycle-tag-filters');
+    filterElement.innerHTML = '';
+
+    const allButton = document.createElement('button');
+    allButton.type = 'button';
+    allButton.className = `tag-filter ${state.activeTagFilters.size ? '' : 'is-selected'}`;
+    allButton.setAttribute('aria-pressed', String(!state.activeTagFilters.size));
+    allButton.textContent = 'Todos';
+    allButton.addEventListener('click', () => {
+        state.activeTagFilters.clear();
+        render();
+    });
+    filterElement.appendChild(allButton);
+
+    tags.forEach((tag) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `tag-filter ${state.activeTagFilters.has(tag) ? 'is-selected' : ''}`;
+        button.textContent = tag;
+        button.setAttribute('aria-pressed', String(state.activeTagFilters.has(tag)));
+        button.addEventListener('click', () => {
+            if (state.activeTagFilters.has(tag)) {
+                state.activeTagFilters.delete(tag);
+            } else {
+                state.activeTagFilters.add(tag);
+            }
+            render();
+        });
+        filterElement.appendChild(button);
     });
 };
 
@@ -254,6 +302,7 @@ const renderCycleForm = () => {
 
     cycleNameInput.value = cycle.name || '';
     cycleRepetitionsInput.value = cycle.repetitions || 1;
+    cycleTagsInput.value = normalizeTags(cycle.tags).join(', ');
     const startSoundSelect = createSoundSelect({
         className: 'start-sound',
         value: cycle.startSoundUrl || cycle.startSound || '',
@@ -477,6 +526,7 @@ const buildCycleFromForm = () => {
     const cards = Array.from(counterListElement.querySelectorAll('.counter-card'));
 
     cycle.name = cycleNameInput.value.trim() || 'Nuevo ciclo';
+    cycle.tags = normalizeTags(cycleTagsInput.value);
     cycle.repetitions = Number(cycleRepetitionsInput.value) || 1;
     cycle.startSoundUrl = startSoundInput.value;
     cycle.startSound = cycle.startSoundUrl;
@@ -617,6 +667,7 @@ const importCycleData = (rawCycle) => {
 
     const importedCycle = { ...rawCycle };
     importedCycle.id = globalThis.crypto?.randomUUID?.() || `id-${Date.now()}`;
+    importedCycle.tags = normalizeTags(importedCycle.tags);
     importedCycle.counters = (importedCycle.counters || []).map((counter, index) => ({
         ...counter,
         id: counter.id || `counter-${index}-${Date.now()}`,
@@ -731,6 +782,7 @@ const openScanQrModal = async () => {
 
 const render = () => {
     ensureSelectedCycle();
+    renderTagFilters();
     renderCycleList();
     renderCycleForm();
     renderActiveTimers();

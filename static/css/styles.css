@@ -118,6 +118,54 @@ button {
     background: rgba(15, 23, 42, 0.96);
 }
 
+.sidebar-filter-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.sidebar-filter-hint {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 400;
+}
+
+.tag-filters,
+.cycle-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.tag-filters {
+    margin-top: 0.55rem;
+}
+
+.tag-filter,
+.tag-badge {
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    border-radius: 999px;
+    padding: 0.25rem 0.55rem;
+    color: #bae6fd;
+    background: rgba(56, 189, 248, 0.08);
+    font-size: 0.73rem;
+    line-height: 1.2;
+}
+
+.tag-filter {
+    cursor: pointer;
+}
+
+.tag-filter.is-selected {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #02131f;
+}
+
 .primary-btn,
 .secondary-btn,
 .ghost-btn,
@@ -201,6 +249,10 @@ button:hover {
 .cycle-meta {
     color: var(--muted);
     font-size: 0.82rem;
+}
+
+.cycle-tags {
+    margin-top: 0.35rem;
 }
 
 .cycle-item-actions {

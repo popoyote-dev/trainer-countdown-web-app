@@ -30,6 +30,7 @@ export function createEmptyCycle() {
     return {
         id: generateId(),
         name: 'Nuevo ciclo',
+        tags: [],
         repetitions: 1,
         startSound: '',
         startSoundUrl: '',
@@ -37,6 +38,13 @@ export function createEmptyCycle() {
         finalSoundUrl: '',
         counters: [createCounter({ name: 'Contador 1', seconds: 30 })],
     };
+}
+
+export function normalizeTags(tags) {
+    const values = Array.isArray(tags) ? tags : String(tags || '').split(',');
+    return [...new Set(values
+        .map((tag) => String(tag || '').trim())
+        .filter(Boolean))].slice(0, 12);
 }
 
 export function validateCycle(cycle) {

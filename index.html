@@ -40,6 +40,11 @@
     <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
     <div class="app-shell">
         <aside class="sidebar">
+            <div class="sidebar-filter-header">
+                <span>Etiquetas</span>
+                <span class="sidebar-filter-hint">Filtrar ciclos</span>
+            </div>
+            <div id="cycle-tag-filters" class="tag-filters" aria-label="Filtrar ciclos por etiqueta"></div>
             <div id="cycle-list" class="cycle-list" aria-live="polite"></div>
             <div class="sidebar-actions">
                 <button id="new-cycle-btn" type="button" class="icon-btn primary-btn" title="Nuevo ciclo"
@@ -70,6 +75,11 @@
                             <input id="cycle-repetitions" name="cycle-repetitions" type="number" min="1" value="1" />
                         </label>
                     </div>
+
+                    <label>
+                        Etiquetas
+                        <input id="cycle-tags" name="cycle-tags" type="text" placeholder="Ej. fuerza, tren superior" />
+                    </label>
 
                     <div class="form-grid sound-fields-grid">
                         <label>
