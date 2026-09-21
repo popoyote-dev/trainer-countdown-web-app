@@ -428,6 +428,17 @@ select {
     font-weight: 700;
 }
 
+.timer-card-header-status {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.timer-card-progress {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
 .timer-card-display {
     font-size: clamp(1.75rem, 5vw, 3rem);
     font-weight: 800;

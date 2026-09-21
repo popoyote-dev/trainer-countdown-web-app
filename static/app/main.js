@@ -371,6 +371,13 @@ const getStatusText = (snapshot) => {
     return statusTextMap.ready;
 };
 
+const getCycleProgressText = (snapshot, cycle) => {
+    const totalRepetitions = snapshot?.totalRepetitions || Number(cycle?.repetitions) || 1;
+    const currentRepeat = snapshot ? Math.min(snapshot.currentRepeat, totalRepetitions) : 0;
+
+    return `${currentRepeat}/${totalRepetitions}`;
+};
+
 const getToggleButtonLabel = (snapshot) => {
     if (snapshot?.isRunning) {
         return 'Pausar';
@@ -402,6 +409,7 @@ const updateTimerCard = (cycleId, snapshot) => {
     card.querySelector('.timer-card-display').textContent = formatTime(remaining);
     card.querySelector('.timer-card-counter-name').textContent = currentCounter?.name || 'Contador';
     card.querySelector('.timer-card-status').textContent = getStatusText(snapshot);
+    card.querySelector('.timer-card-progress').textContent = getCycleProgressText(snapshot, cycle);
 
     const toggleLabel = getToggleButtonLabel(snapshot);
     const toggleButton = card.querySelector('.timer-card-toggle');
@@ -488,7 +496,10 @@ const createTimerCard = (cycle) => {
     card.innerHTML = `
       <div class="timer-card-header">
         <span class="timer-card-name">${cycle.name || 'Ciclo sin nombre'}</span>
-        <span class="timer-card-status">Listo</span>
+                <div class="timer-card-header-status">
+                    <span class="timer-card-status">Listo</span>
+                    <span class="timer-card-progress">0/${cycle.repetitions || 1}</span>
+                </div>
       </div>
             <div class="cycle-tags timer-card-tags" aria-label="Etiquetas">${tags.map((tag) => `<span class="tag-badge">${tag.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`).join('')}</div>
       <div class="timer-card-display">00:00</div>
