@@ -82,6 +82,56 @@ const state = {
     activeTagFilters: new Set(),
 };
 
+let wakeLockSentinel = null;
+let wakeLockRequestInFlight = null;
+
+const hasRunningTimer = () => [...state.timers.values()].some((timer) => timer.getSnapshot().isRunning);
+
+const releaseWakeLock = async () => {
+    if (!wakeLockSentinel) {
+        return;
+    }
+
+    const sentinel = wakeLockSentinel;
+    wakeLockSentinel = null;
+    await sentinel.release().catch(() => { });
+};
+
+const updateWakeLock = async () => {
+    if (!('wakeLock' in navigator) || document.visibilityState !== 'visible') {
+        await releaseWakeLock();
+        return;
+    }
+
+    if (!hasRunningTimer()) {
+        await releaseWakeLock();
+        return;
+    }
+
+    if (wakeLockSentinel || wakeLockRequestInFlight) {
+        return;
+    }
+
+    wakeLockRequestInFlight = navigator.wakeLock.request('screen')
+        .then((sentinel) => {
+            wakeLockSentinel = sentinel;
+            sentinel.addEventListener('release', () => {
+                wakeLockSentinel = null;
+                updateWakeLock();
+            });
+        })
+        .catch(() => { })
+        .finally(() => {
+            wakeLockRequestInFlight = null;
+        });
+
+    await wakeLockRequestInFlight;
+};
+
+document.addEventListener('visibilitychange', () => {
+    updateWakeLock();
+});
+
 const persistCycles = () => {
     saveCycles(state.cycles).catch((error) => console.error('No se pudo guardar el ciclo.', error));
 };
@@ -143,6 +193,7 @@ const deactivateCycle = (cycleId) => {
         state.timers.delete(cycleId);
     }
 
+    updateWakeLock();
     render();
 };
 
@@ -427,6 +478,7 @@ const createTimerListeners = (cycleId) => ({
     onCycleRepeat: (snapshot) => updateTimerCard(cycleId, snapshot),
     onComplete: (snapshot) => {
         updateTimerCard(cycleId, snapshot);
+        updateWakeLock();
     },
     onCycleStart: async (snapshot) => {
         updateTimerCard(cycleId, snapshot);
@@ -476,6 +528,7 @@ const toggleCycleTimer = (cycleId) => {
     }
 
     updateTimerCard(cycleId, timer.getSnapshot());
+    updateWakeLock();
 };
 
 const restartCycleTimer = (cycleId) => {
@@ -486,6 +539,7 @@ const restartCycleTimer = (cycleId) => {
 
     timer.restart();
     updateTimerCard(cycleId, timer.getSnapshot());
+    updateWakeLock();
 };
 
 const createTimerCard = (cycle) => {
