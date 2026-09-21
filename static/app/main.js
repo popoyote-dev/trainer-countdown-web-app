@@ -471,11 +471,13 @@ const createTimerCard = (cycle) => {
     const card = document.createElement('div');
     card.className = 'timer-card';
     card.dataset.cycleId = cycle.id;
+    const tags = normalizeTags(cycle.tags);
     card.innerHTML = `
       <div class="timer-card-header">
         <span class="timer-card-name">${cycle.name || 'Ciclo sin nombre'}</span>
         <span class="timer-card-status">Listo</span>
       </div>
+            <div class="cycle-tags timer-card-tags" aria-label="Etiquetas">${tags.map((tag) => `<span class="tag-badge">${tag.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`).join('')}</div>
       <div class="timer-card-display">00:00</div>
       <div class="timer-card-current">
         <span>Actual</span>
