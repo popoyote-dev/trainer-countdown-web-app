@@ -238,11 +238,6 @@ button:hover {
     padding: 0.8rem 0.9rem;
 }
 
-.cycle-item.selected {
-    border-color: rgba(56, 189, 248, 0.7);
-    background: rgba(14, 165, 233, 0.13);
-}
-
 .cycle-item.is-active {
     border-color: rgba(74, 222, 128, 0.6);
 }

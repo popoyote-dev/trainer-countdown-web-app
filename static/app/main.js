@@ -225,7 +225,7 @@ const renderCycleList = () => {
         const isActive = state.activeCycleIds.includes(cycle.id);
         const tags = normalizeTags(cycle.tags);
         const item = document.createElement('div');
-        item.className = `cycle-item ${cycle.id === state.selectedCycleId ? 'selected' : ''} ${isActive ? 'is-active' : ''}`;
+        item.className = `cycle-item ${isActive ? 'is-active' : ''}`;
         item.dataset.id = cycle.id;
         item.innerHTML = `
       <span class="cycle-name">${cycle.name || 'Sin nombre'}</span>
