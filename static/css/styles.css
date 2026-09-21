@@ -506,6 +506,8 @@ select {
     box-shadow: var(--shadow);
     padding: 1.25rem;
     width: min(400px, 100%);
+    max-height: calc(100dvh - 3rem);
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -537,6 +539,9 @@ select {
 
 .qr-video {
     width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 55dvh;
+    object-fit: cover;
     border-radius: 12px;
     background: #000;
 }
