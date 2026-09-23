@@ -306,6 +306,86 @@ const renderTagFilters = () => {
     });
 };
 
+const getCounterNameSuggestions = () => [...new Set(state.cycles
+    .flatMap((cycle) => Array.isArray(cycle.counters) ? cycle.counters : [])
+    .map((counter) => String(counter?.name || '').trim())
+    .filter(Boolean))]
+    .sort((firstName, secondName) => firstName.localeCompare(secondName));
+
+const createCounterNameAutocomplete = (counterNameInput) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'counter-name-autocomplete';
+
+    const suggestionsElement = document.createElement('div');
+    suggestionsElement.className = 'counter-name-suggestions';
+    suggestionsElement.setAttribute('role', 'listbox');
+    suggestionsElement.hidden = true;
+
+    let activeSuggestionIndex = -1;
+
+    const closeSuggestions = () => {
+        activeSuggestionIndex = -1;
+        suggestionsElement.hidden = true;
+    };
+
+    const selectSuggestion = (name) => {
+        counterNameInput.value = name;
+        closeSuggestions();
+    };
+
+    const renderSuggestions = () => {
+        const query = counterNameInput.value.trim().toLocaleLowerCase();
+        const names = getCounterNameSuggestions().filter((name) => name.toLocaleLowerCase().includes(query));
+        suggestionsElement.innerHTML = '';
+        activeSuggestionIndex = -1;
+
+        names.forEach((name, index) => {
+            const option = document.createElement('button');
+            option.type = 'button';
+            option.className = 'counter-name-suggestion';
+            option.textContent = name;
+            option.setAttribute('role', 'option');
+            option.addEventListener('mousedown', (event) => {
+                event.preventDefault();
+                selectSuggestion(name);
+            });
+            option.addEventListener('mouseenter', () => {
+                activeSuggestionIndex = index;
+            });
+            suggestionsElement.appendChild(option);
+        });
+
+        suggestionsElement.hidden = names.length === 0;
+    };
+
+    counterNameInput.addEventListener('focus', renderSuggestions);
+    counterNameInput.addEventListener('input', renderSuggestions);
+    counterNameInput.addEventListener('blur', () => {
+        window.setTimeout(closeSuggestions, 120);
+    });
+    counterNameInput.addEventListener('keydown', (event) => {
+        const options = [...suggestionsElement.querySelectorAll('.counter-name-suggestion')];
+        if (suggestionsElement.hidden || !options.length) {
+            return;
+        }
+
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            const direction = event.key === 'ArrowDown' ? 1 : -1;
+            activeSuggestionIndex = (activeSuggestionIndex + direction + options.length) % options.length;
+            options.forEach((option, index) => option.classList.toggle('is-active', index === activeSuggestionIndex));
+        } else if (event.key === 'Enter' && activeSuggestionIndex >= 0) {
+            event.preventDefault();
+            selectSuggestion(options[activeSuggestionIndex].textContent);
+        } else if (event.key === 'Escape') {
+            closeSuggestions();
+        }
+    });
+
+    wrapper.append(counterNameInput, suggestionsElement);
+    return wrapper;
+};
+
 const createCounterCard = (counter, index) => {
     const card = document.createElement('div');
     card.className = 'counter-card';
@@ -343,6 +423,9 @@ const createCounterCard = (counter, index) => {
         </div>
     </div>
   `;
+
+    const counterNameInput = card.querySelector('.counter-name');
+    counterNameInput.parentElement.appendChild(createCounterNameAutocomplete(counterNameInput));
 
     card.querySelector('.counter-sound-field').appendChild(createSoundSelect({
         className: 'counter-sound',

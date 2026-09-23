@@ -384,6 +384,53 @@ select {
     margin-bottom: 0;
 }
 
+.counter-name-autocomplete {
+    position: relative;
+}
+
+.counter-name-autocomplete .counter-name {
+    width: 100%;
+}
+
+.counter-name-suggestions {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 0.35rem);
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 12rem;
+    overflow-y: auto;
+    padding: 0.3rem;
+    background: rgba(56, 189, 248, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+    backdrop-filter: blur(8px);
+}
+
+.counter-name-suggestions[hidden] {
+    display: none;
+}
+
+.counter-name-suggestion {
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    color: #ffffff;
+    background: transparent;
+    border: 0;
+    border-radius: 7px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.counter-name-suggestion:hover,
+.counter-name-suggestion.is-active {
+    background: rgba(56, 189, 248, 0.35);
+    color: #ffffff;
+}
+
 .danger-link {
     background: transparent;
     border: none;
